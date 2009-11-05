@@ -1,3 +1,16 @@
+dsme (0.60.39+0m5) unstable; urgency=low
+
+  * This entry has been added by BIFH queue processor
+    Suffix +0m5 added to package revision
+
+ -- Swert De <philippe.de-swert@nokia.com>  Thu, 05 Nov 2009 19:18:24 +0200
+
+dsme (0.60.39) unstable; urgency=low
+
+  * Fixes: NB#139135: parameterize reboot and shutdown in shutdown_ind on D-Bus
+
+ -- Semi Malinen <semi.malinen@nokia.com>  Wed, 04 Nov 2009 15:09:34 +0000
+
 dsme (0.60.38) unstable; urgency=low
 
   * Fixes: NB#144351: send alarm state in addition to state query response
