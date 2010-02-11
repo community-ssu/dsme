@@ -118,12 +118,15 @@ static void connect_to_dsme(void)
 
 static void disconnect_from_dsme(void)
 {
-    dsmesock_close(conn);
+    if ( conn ) {
+       dsmesock_close(conn);
+       conn = NULL;
+    }
 }
 
 static void send_to_dsme(const void* msg)
 {
-    if (dsmesock_send(conn, msg) == -1) {
+    if (!conn || dsmesock_send(conn, msg) == -1) {
         perror("dsmesock_send");
         exit(EXIT_FAILURE);
     }
@@ -133,7 +136,7 @@ static void send_to_dsme_with_extra(const void* msg,
                                     size_t      extra_size,
                                     const void* extra)
 {
-    if (dsmesock_send_with_extra(conn, msg, extra_size, extra) == -1) {
+    if (!conn || dsmesock_send_with_extra(conn, msg, extra_size, extra) == -1) {
         perror("dsmesock_send_with_extra");
         exit(EXIT_FAILURE);
     }
@@ -143,7 +146,7 @@ static int get_version(void)
 {
     DSM_MSGTYPE_GET_VERSION   req_msg =
           DSME_MSG_INIT(DSM_MSGTYPE_GET_VERSION);
-    void*                     p;
+    void*                     p = NULL;
     DSM_MSGTYPE_DSME_VERSION* retmsg = NULL;
     fd_set                    rfds;
     int                       ret = -1;
@@ -154,7 +157,7 @@ static int get_version(void)
 
     send_to_dsme(&req_msg);
 
-    while (true) {
+    while (conn) {
         FD_ZERO(&rfds);
         FD_SET(conn->fd, &rfds);
         struct timeval tv;
@@ -174,6 +177,12 @@ static int get_version(void)
         }
 
         p = dsmesock_receive(conn);
+
+        if (DSMEMSG_CAST(DSM_MSGTYPE_CLOSE, p)) { 
+            printf("Dsme closed socket\n");
+            free(p);
+            return -1;   
+        }
 
         if ((retmsg = DSMEMSG_CAST(DSM_MSGTYPE_DSME_VERSION, p)) == 0) {
             fprintf(stderr, "Received invalid message\n");
@@ -219,7 +228,7 @@ static int send_process_start_request(const char*       command,
     msg.oom_adj        = oom_adj;
     send_to_dsme_with_extra(&msg, strlen(command) + 1, command);
 
-    while (true) {
+    while (conn) {
         FD_ZERO(&rfds);
         FD_SET(conn->fd, &rfds);
 
@@ -230,6 +239,12 @@ static int send_process_start_request(const char*       command,
         }
 
         retmsg = (DSM_MSGTYPE_PROCESS_STARTSTATUS*)dsmesock_receive(conn);
+        
+        if (DSMEMSG_CAST(DSM_MSGTYPE_CLOSE, retmsg)) {
+            printf("Dsme closed socket\n");
+            free(retmsg);
+            return -1;
+        }
 
         if (DSMEMSG_CAST(DSM_MSGTYPE_PROCESS_STARTSTATUS, retmsg) == 0) {
             printf("Received invalid message (type: %i)\n",
@@ -245,6 +260,8 @@ static int send_process_start_request(const char*       command,
 
         return ret;
     }
+
+   return -1;
 }
 
 static int send_process_stop_request(const char* command, int signal)
@@ -258,7 +275,7 @@ static int send_process_stop_request(const char* command, int signal)
     msg.signal = signal;
     send_to_dsme_with_extra(&msg, strlen(command) + 1, command);
 
-    while (true) {
+    while (conn) {
         FD_ZERO(&rfds);
         FD_SET(conn->fd, &rfds);
         struct timeval tv;
@@ -279,6 +296,12 @@ static int send_process_stop_request(const char* command, int signal)
 
         retmsg = (DSM_MSGTYPE_PROCESS_STOPSTATUS*)dsmesock_receive(conn);
 
+        if (DSMEMSG_CAST(DSM_MSGTYPE_CLOSE, retmsg)) {
+            printf("Dsme closed socket\n");
+            free(retmsg);
+            return -1;   
+        }
+
         if (DSMEMSG_CAST(DSM_MSGTYPE_PROCESS_STOPSTATUS, retmsg) == 0) {
             printf("Received invalid message (type: %i)\n",
                    dsmemsg_id((dsmemsg_generic_t*)retmsg));
@@ -298,6 +321,8 @@ static int send_process_stop_request(const char* command, int signal)
 
         return ret;
     }
+
+    return -1;
 }
 
 static int send_dbus_service_start_request()

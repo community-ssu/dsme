@@ -262,7 +262,7 @@ char* dsme_dbus_endpoint_name(const DsmeDbusMessage* request)
       name = strdup("(null request)");
   } else {
       pid_t pid;
-      char* sender = strdup(dbus_message_get_sender(request->msg));
+      const char* sender = dbus_message_get_sender(request->msg);
       if (!dbus_bus_get_unix_process_id(request->connection, sender, &pid)) {
           name = strdup("(could not get pid)");
       } else {

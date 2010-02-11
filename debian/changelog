@@ -1,9 +1,40 @@
-dsme (0.60.39+0m5) unstable; urgency=low
+dsme (0.60.44+0m5) unstable; urgency=low
 
   * This entry has been added by BIFH queue processor
     Suffix +0m5 added to package revision
 
- -- Swert De <philippe.de-swert@nokia.com>  Thu, 05 Nov 2009 19:18:24 +0200
+ -- Chandra Vanipenta <ext-chandra.1.vanipenta@nokia.com>  Thu, 11 Feb 2010 13:29:45 +0200
+
+dsme (0.60.44) unstable; urgency=low
+
+  * Fixes: NB#153879: dsmetool crash due to connection is closed
+  * Fix memory leak
+
+ -- Sergey Yakubenko <EXT-Sergey.Yakubenko@nokia.com>  Mon, 08 Feb 2010 12:57:02 +0300
+
+dsme (0.60.43) unstable; urgency=low
+
+  * Fixes: NB#155046: reverting memory locking back to full
+
+ -- Sergey Yakubenko <EXT-Sergey.Yakubenko@nokia.com>  Tue, 02 Feb 2010 11:19:24 +0300
+
+dsme (0.60.42) unstable; urgency=low
+
+  * Fixes: NB#153879: dsmetool crash due to connection is closed
+
+ -- Sergey Yakubenko <EXT-Sergey.Yakubenko@nokia.com>  Thu, 28 Jan 2010 16:59:38 +0300
+
+dsme (0.60.41) unstable; urgency=low
+
+  * Fixes: NB#153778: replace sysinfod by dbus in /etc/event.d/dsme-thermal
+
+ -- Victor Portnov <ext-victor.portnov@nokia.com>  Wed, 20 Jan 2010 17:55:17 +0300
+
+dsme (0.60.40) unstable; urgency=low
+
+  * Fixes: NB#147969: dsme memory locking is used only for necessary code and data segments
+
+ -- Sergey Yakubenko <EXT-Sergey.Yakubenko@nokia.com>  Tue, 22 Dec 2009 12:03:11 +0300
 
 dsme (0.60.39) unstable; urgency=low
 

@@ -1,7 +1,7 @@
 description "Select thermal limits"
 author "Semi Malinen"
 
-start on started sysinfod
+start on started dbus
 
 console output
 
@@ -16,8 +16,8 @@ script
                      string:/certs/ccc/pp/thermal-manager-raw"
         THERMALPATTERN="byte 2"
 
-# give sysinfod some time to get its D-Bus interface up
-        sleep 3
+# sleep is not required, since sysinfod is service now and starting up per request if not started yet
+#        sleep 3
 
         rm -f $THERMALCONFIG
         if [ -x $THERMALTOOL ] ; then
