@@ -1,9 +1,21 @@
-dsme (0.60.44+0m5) unstable; urgency=low
+dsme (0.60.46+0m5) unstable; urgency=low
 
   * This entry has been added by BIFH queue processor
-    Suffix +0m5 added to package revision
+    version has been changed to 0.60.46+0m5
 
- -- Chandra Vanipenta <ext-chandra.1.vanipenta@nokia.com>  Thu, 11 Feb 2010 13:29:45 +0200
+ -- Chandra Vanipenta <ext-chandra.1.vanipenta@nokia.com>  Fri, 30 Apr 2010 13:41:34 +0300
+
+dsme (0.60.46) unstable; urgency=low
+
+  * reverting memory locking back to full. Fixes: NB#155046. 
+
+ -- Sergey Yakubenko <EXT-Sergey.Yakubenko@nokia.com>  Fri, 30 Apr 2010 14:09:01 +0400
+
+dsme (0.60.45) unstable; urgency=low
+
+  * dsme full locking to be reverted. Fixes: NB#164601.  
+
+ -- Sergey Yakubenko <EXT-Sergey.Yakubenko@nokia.com>  Tue, 20 Apr 2010 18:58:02 +0400
 
 dsme (0.60.44) unstable; urgency=low
 

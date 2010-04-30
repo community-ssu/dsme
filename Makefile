@@ -4,7 +4,7 @@
 BINARIES     := dsme dsme-exec-helper
 SUBDIRS      := util modules
 
-VERSION := 0.60.39
+VERSION := 0.60.46
 
 #
 # Install files in this directory

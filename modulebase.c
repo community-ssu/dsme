@@ -553,8 +553,6 @@ bool unload_module(module_t* module)
     GSList* node;
 
     if (module && (node = g_slist_find(modules, module))) {
-        if (node == 0) return -1;
-
         remove_msghandlers(module);
 
         if (module->handle) {
