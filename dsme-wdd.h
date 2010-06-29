@@ -1,9 +1,9 @@
 /**
-   @file thermalsensor_battery.h
+   @file dsme-wdd.h
 
-   DSME internal battery temperature i/f
+   This file has defines hardware watchdog kicker.
    <p>
-   Copyright (C) 2009 Nokia Corporation.
+   Copyright (C) 2010 Nokia Corporation.
 
    @author Semi Malinen <semi.malinen@nokia.com>
 
@@ -21,13 +21,10 @@
    You should have received a copy of the GNU Lesser General Public
    License along with Dsme.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef THERMALSENSOR_BATTERY_H
-#define THERMALSENSOR_BATTERY_H
 
-#include <stdbool.h>
+#ifndef DSME_WDD_H
+#define DSME_WDD_H
 
-extern bool dsme_request_battery_temperature(
-                void* cookie,
-                void (callback)(void* cookie, int temperature));
+#define ME "dsme wdd: "
 
 #endif

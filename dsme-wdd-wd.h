@@ -1,11 +1,11 @@
 /**
-   @file dsme_wd.h 
+   @file dsme-wdd-wd.h
 
    This file has defines hardware watchdog kicker.
    <p>
-   Copyright (C) 2004-2009 Nokia Corporation.
+   Copyright (C) 2004-2010 Nokia Corporation.
 
-   @author Igor Stoppa <igor.stopaa@nokia.com>
+   @author Semi Malinen <semi.malinen@nokia.com>
 
    This file is part of Dsme.
 
@@ -22,13 +22,18 @@
    License along with Dsme.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DSME_WD_H
-#define DSME_WD_H
+#ifndef DSME_WDD_WD_H
+#define DSME_WDD_WD_H
 
 #include <stdbool.h>
 
-/* Period for kicking; i.e. how often dsme wakes up to kick the watchdogs */
-#define DSME_WD_PERIOD 12 /* seconds */
+// Period for kicking; i.e. how soon the quickest watchdog will bite.
+// NOTE: This must be picked from the wd[] array in dsme-wdd-wd.c!
+#define DSME_SHORTEST_WD_PERIOD 14 // seconds
+
+// Period for heartbeat; i.e. how often we wakeup to kick watchdogs, etc.
+// We take a 2 second window for kicking the watchdogs.
+#define DSME_HEARTBEAT_INTERVAL (DSME_SHORTEST_WD_PERIOD - 2) // seconds
 
 #ifdef __cplusplus
 extern "C" {

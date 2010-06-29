@@ -5,7 +5,6 @@ Maintainer: Semi Malinen <semi.malinen@nokia.com>
 Uploaders: Ismo Laitinen <ismo.laitinen@nokia.com>, David Weinehall <david.weinehall@nokia.com>, Philippe De Swert <philippe.de-swert@nokia.com>
 Build-Depends: debhelper (>= 4.1.0),
  libdsme0.2.0-dev (>= 0.60.29),
- libbmeipc-dev,
  libcal-dev (>= 0.2.0),
  pkg-config,
  libglib2.0-dev,
@@ -32,3 +31,9 @@ Description: Device State Management Entity (with debug symbols)
  This package contains the Device State Management Entity which provides state
  management features such as service monitoring, process watchdog and
  inactivity tracking.
+
+Package: dsme-dev
+Section: devel
+Architecture: any
+Description: Development files for dsme
+ This package contains headers.

@@ -24,6 +24,8 @@
 
 // TODO: add D-Bus filtering
 
+#define _BSD_SOURCE
+
 #include "dsme_dbus.h"
 
 #include "dsme/logging.h"
@@ -177,7 +179,7 @@ struct Dispatcher {
   union {
     DsmeDbusMethod*  method;
     DsmeDbusHandler* handler;
-  };
+  } target;
   const char*  interface;
   const char*  name;
   const char*  rules;
@@ -262,12 +264,13 @@ char* dsme_dbus_endpoint_name(const DsmeDbusMessage* request)
       name = strdup("(null request)");
   } else {
       pid_t pid;
-      const char* sender = dbus_message_get_sender(request->msg);
+      char* sender = strdup(dbus_message_get_sender(request->msg));
       if (!dbus_bus_get_unix_process_id(request->connection, sender, &pid)) {
           name = strdup("(could not get pid)");
       } else {
           name = endpoint_name_by_pid(pid);
       }
+      free(sender);
   }
 
   return name;
@@ -282,7 +285,7 @@ static void method_dispatcher_dispatch(const Dispatcher* dispatcher,
   };
   DsmeDbusMessage* reply   = 0;
 
-  dispatcher->method(&request, &reply);
+  dispatcher->target.method(&request, &reply);
 
   dbus_connection_unref(request.connection);
   dbus_message_unref(request.msg);
@@ -301,7 +304,7 @@ static Dispatcher* method_dispatcher_new(DsmeDbusMethod* method,
 
   dispatcher->can_dispatch = method_dispatcher_can_dispatch;
   dispatcher->dispatch     = method_dispatcher_dispatch;
-  dispatcher->method       = method;
+  dispatcher->target.method       = method;
   // NOTE: we don't bother to strdup()
   dispatcher->interface    = interface;
   dispatcher->name         = name;
@@ -327,7 +330,7 @@ static void handler_dispatcher_dispatch(const Dispatcher* dispatcher,
 
   dbus_message_iter_init(msg, &ind.iter);
 
-  dispatcher->handler(&ind);
+  dispatcher->target.handler(&ind);
 
   dbus_connection_unref(ind.connection);
   dbus_message_unref(ind.msg);
@@ -341,7 +344,7 @@ static Dispatcher* handler_dispatcher_new(DsmeDbusHandler* handler,
 
   dispatcher->can_dispatch = handler_dispatcher_can_dispatch;
   dispatcher->dispatch     = handler_dispatcher_dispatch;
-  dispatcher->handler      = handler;
+  dispatcher->target.handler      = handler;
   // NOTE: we don't bother to strdup()
   dispatcher->interface    = interface;
   dispatcher->name         = name;

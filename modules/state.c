@@ -24,7 +24,6 @@
 */
 
 #include "runlevel.h"
-#include "hwwd.h"
 #include "dsme/timers.h"
 #include "dsme/modules.h"
 #include "dsme/logging.h"
@@ -36,7 +35,9 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
-
+#include <signal.h>
+#include <unistd.h>
+#include <sys/types.h>
 
 /**
  * Timer value for actdead shutdown timer. This is how long we wait before doing a
@@ -400,10 +401,11 @@ static void change_runlevel(dsme_state_t state)
   broadcast_internally(&msg);
 }
 
+// TODO: this could be removed since dsme will automatically kick wd's
+//       when going down
 static void kick_wds(void)
 {
-  DSM_MSGTYPE_HWWD_KICK msg = DSME_MSG_INIT(DSM_MSGTYPE_HWWD_KICK);
-  broadcast_internally(&msg);
+  kill(getppid(), SIGHUP);
 }
 
 static void stop_delayed_runlevel_timers(void)

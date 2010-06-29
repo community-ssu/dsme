@@ -1,9 +1,21 @@
-dsme (0.60.46+0m5) unstable; urgency=low
+dsme (0.60.48+0m5) unstable; urgency=low
 
   * This entry has been added by BIFH queue processor
-    version has been changed to 0.60.46+0m5
+    version has been changed to 0.60.48+0m5
 
- -- Chandra Vanipenta <ext-chandra.1.vanipenta@nokia.com>  Fri, 30 Apr 2010 13:41:34 +0300
+ -- Chandra Vanipenta <ext-chandra.1.vanipenta@nokia.com>  Tue, 29 Jun 2010 12:18:02 +0300
+
+dsme (0.60.48) unstable; urgency=low
+
+  * libbmeipc-dev and DSME need fixing. Fixes: NB#102989.
+
+ -- Sergey Yakubenko <EXT-Sergey.Yakubenko@nokia.com>  Tue, 15 Jun 2010 12:57:47 +0400
+
+dsme (0.60.47) unstable; urgency=low
+
+  * Splitting DSME required to reduce locked memory. Fixes: NB#159423.
+
+ -- Sergey Yakubenko <EXT-Sergey.Yakubenko@nokia.com>  Mon, 24 May 2010 12:08:07 +0400
 
 dsme (0.60.46) unstable; urgency=low
 

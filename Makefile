@@ -1,10 +1,10 @@
 #
 # Build targets
 #
-BINARIES     := dsme dsme-exec-helper
+BINARIES     := dsme dsme-server dsme-exec-helper
 SUBDIRS      := util modules
 
-VERSION := 0.60.46
+VERSION := 0.60.48
 
 #
 # Install files in this directory
@@ -13,16 +13,28 @@ INSTALL_PERM  := 644
 INSTALL_OWNER := $(shell id -u)
 INSTALL_GROUP := $(shell id -g)
 
-INSTALL_BINARIES                      := dsme dsme-exec-helper
+INSTALL_BINARIES                      := dsme dsme-server dsme-exec-helper
 $(INSTALL_BINARIES)    : INSTALL_PERM := 755
 $(INSTALL_BINARIES)    : INSTALL_DIR  := $(DESTDIR)/sbin
+
+INSTALL_INCLUDES                      := include/dsme/dsme-cal.h     \
+                                         include/dsme/dsmesock.h     \
+                                         include/dsme/logging.h      \
+                                         include/dsme/mainloop.h     \
+                                         include/dsme/modulebase.h   \
+                                         include/dsme/modules.h      \
+                                         include/dsme/oom.h          \
+                                         include/dsme/timers.h       \
+                                         dsme-wdd-wd.h              
+
+$(INSTALL_INCLUDES)    : INSTALL_DIR  := $(DESTDIR)/usr/include/dsme
 
 #
 # Compiler and tool flags
 # C_OPTFLAGS are not used for debug builds (ifdef DEBUG)
 # C_DBGFLAGS are not used for normal builds
 #
-C_GENFLAGS     := -DPRG_VERSION=$(VERSION) -pthread -g \
+C_GENFLAGS     := -DPRG_VERSION=$(VERSION) -pthread -g -std=c99 \
                   -Wall -Wwrite-strings -Wmissing-prototypes -Werror# -pedantic
 C_OPTFLAGS     := -O2 -s
 C_DBGFLAGS     := -g -DDEBUG -DDSME_LOG_ENABLE
@@ -51,19 +63,27 @@ endif
 #
 
 # dsme
-dsme_C_OBJS             := dsme.o modulebase.o timers.o \
-                           logging.o oom.o mainloop.o \
-                           dsme-cal.o dsmesock.o
-dsme_LIBS               := dsme dl cal
-dsme: LD_EXTRA_GENFLAGS := -rdynamic $$(pkg-config --libs gthread-2.0)
+dsme_C_OBJS       := dsme-wdd.o dsme-wdd-wd.o oom.o
+dsme: C_OPTFLAGS  := -O2 -s
+dsme: C_GENFLAGS  := -DPRG_VERSION=$(VERSION) -g -std=c99 \
+                     -Wall -Wwrite-strings -Wmissing-prototypes -Werror
+dsme_LIBS         := cal
+dsme: LD_GENFLAGS :=
 
-#logging.o:	C_EXTRA_DEFINES	:=	USE_STDERR
-dsme.o      : C_EXTRA_GENFLAGS := $$(pkg-config --cflags glib-2.0)
-mainloop.o  : C_EXTRA_GENFLAGS := $$(pkg-config --cflags glib-2.0)
-modulebase.o: C_EXTRA_GENFLAGS := $$(pkg-config --cflags glib-2.0)
-timers.o    : C_EXTRA_GENFLAGS := $$(pkg-config --cflags glib-2.0)
-dsmesock.o  : C_EXTRA_GENFLAGS := $$(pkg-config --cflags glib-2.0)
 
+# dsme-server
+dsme-server_C_OBJS             := dsme-server.o modulebase.o timers.o \
+                                  logging.o oom.o mainloop.o          \
+                                  dsme-cal.o dsmesock.o
+dsme-server_LIBS               := dsme dl cal
+dsme-server: LD_EXTRA_GENFLAGS := -rdynamic $$(pkg-config --libs gthread-2.0)
+
+#logging.o: C_EXTRA_DEFINES :=  USE_STDERR
+dsme-server.o : C_EXTRA_GENFLAGS := $$(pkg-config --cflags glib-2.0)
+mainloop.o    : C_EXTRA_GENFLAGS := $$(pkg-config --cflags glib-2.0)
+modulebase.o  : C_EXTRA_GENFLAGS := $$(pkg-config --cflags glib-2.0)
+timers.o      : C_EXTRA_GENFLAGS := $$(pkg-config --cflags glib-2.0)
+dsmesock.o    : C_EXTRA_GENFLAGS := $$(pkg-config --cflags glib-2.0)
 
 # TODO: move dsme-exec-helper to modules/
 # dsme-exec-helper

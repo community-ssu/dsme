@@ -69,7 +69,6 @@
  */
 const char *modules[] = {
     "libheartbeat.so",
-    "libhwwd.so",
     "librunlevel.so",
     "libstate.so",
     "liblifeguard.so",
