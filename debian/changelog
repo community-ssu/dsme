@@ -1,3 +1,9 @@
+dsme (0.60.49+0cssu1) unstable; urgency=low
+
+  * Add option -p|--poweroff to dsmetool for clean device shutdown
+
+ -- Pali Rohár <pali.rohar@gmail.com>  Wed, 02 Jan 2013 14:33:17 +0100
+
 dsme (0.60.48+0m5) unstable; urgency=low
 
   * This entry has been added by BIFH queue processor

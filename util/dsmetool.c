@@ -98,6 +98,7 @@ void usage(const char* name)
 #if 0 // TODO
 "  -s --stop-dbus                  Stop DSME's D-Bus services\n"
 #endif
+"  -p --poweroff                   Power off the device\n"
 "  -b --reboot                     Reboot the device\n"
 "  -v --version                    Print the versions of DSME and dsmetool\n"
 "  -h --help                       Print usage\n"
@@ -348,6 +349,17 @@ static int send_dbus_service_stop_request()
     return EXIT_SUCCESS;
 }
 
+static int send_poweroff_request()
+{
+    DSM_MSGTYPE_SHUTDOWN_REQ msg = DSME_MSG_INIT(DSM_MSGTYPE_SHUTDOWN_REQ);
+
+    connect_to_dsme();
+    send_to_dsme(&msg);
+    disconnect_from_dsme();
+
+    return EXIT_SUCCESS;
+}
+
 static int send_reboot_request()
 {
     DSM_MSGTYPE_REBOOT_REQ msg = DSME_MSG_INIT(DSM_MSGTYPE_REBOOT_REQ);
@@ -389,7 +401,7 @@ int main(int argc, char* argv[])
     enum { NONE, START, STOP } action = NONE;
     const char* program       = "";
     process_actions_t policy  = ONCE;
-    const char* short_options = "n:m:hr:f:t:o:c:T:k:S:u:g:U:G:dsbva";
+    const char* short_options = "n:m:hr:f:t:o:c:T:k:S:u:g:U:G:dspbva";
     const struct option long_options[] = {
         {"help",               0, NULL, 'h'},
         {"start-reset",        1, NULL, 'r'},
@@ -408,6 +420,7 @@ int main(int argc, char* argv[])
         {"oom-adj",            1, NULL, 'm'},
         {"start-dbus",         0, NULL, 'd'},
         {"stop-dbus",          0, NULL, 's'},
+        {"poweroff",           0, NULL, 'p'},
         {"reboot",             0, NULL, 'b'},
         {"version",            0, NULL, 'v'},
         {"ta-test",            0, NULL, 'a'},
@@ -476,6 +489,9 @@ int main(int argc, char* argv[])
                 break;
             case 's':
                 return send_dbus_service_stop_request();
+                break;
+            case 'p':
+                return send_poweroff_request();
                 break;
             case 'b':
                 return send_reboot_request();
