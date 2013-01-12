@@ -1,3 +1,10 @@
+dsme (0.60.49+0cssu2) unstable; urgency=low
+
+  * Do not call getbootstate, it can increase reboot count which causing MALF
+    Instead read bootreason from file /var/lib/dsme/saved_state
+
+ -- Pali Rohár <pali.rohar@gmail.com>  Sat, 12 Jan 2013 23:31:26 +0100
+
 dsme (0.60.49+0cssu1) unstable; urgency=low
 
   * Add option -p|--poweroff to dsmetool for clean device shutdown

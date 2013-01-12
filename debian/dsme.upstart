@@ -7,7 +7,7 @@ stop on starting shutdown
 console output
 
 script
-        export BOOTSTATE=`getbootstate 2>/dev/null`
+        export BOOTSTATE=`cat /var/lib/dsme/saved_state`
         touch /tmp/$BOOTSTATE
         echo $BOOTSTATE > /tmp/STATE
 
