@@ -295,6 +295,9 @@ void dsme_log_txt(int level, const char* fmt, ...)
     va_start(ap, fmt);
 
     if (logopt.verbosity >= level) {
+        va_list aq;
+
+        va_copy(aq, ap);
         /* buffer for the logging thread to log */
         log_entry* entry =
             &ring_buffer[write_count % DSME_MAX_LOG_BUFFER_ENTRIES];
@@ -303,13 +306,15 @@ void dsme_log_txt(int level, const char* fmt, ...)
         vsnprintf(entry->message,
                   DSME_MAX_LOG_MESSAGE_LENGTH + 1,
                   fmt,
-                  ap);
+                  aq);
         entry->message[DSME_MAX_LOG_MESSAGE_LENGTH] = '\0';
 
         ++write_count;
 
         /* wake up the logging thread */
         sem_post(&ring_buffer_sem);
+
+        va_end(aq);
     }
 
     /* always output critical messages to console */
